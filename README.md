@@ -10,30 +10,47 @@
 
 ---
 
-## Description
+## Overview
 
-This project is a NestJS application running on the **Bun JavaScript runtime** instead of the default Node.js runtime.
+This is a NestJS API running on the Bun runtime. It includes:
+- API docs via OpenAPI (Swagger) + Scalar
+- MongoDB integration via Mongoose
+- A minimal `users` module (create user + fetch by id)
 
-It demonstrates:
-- Running NestJS using Bun as the runtime
-- Managing dependencies with Bun
-- Generating OpenAPI specifications using `@nestjs/swagger`
-- Rendering API documentation with Scalar
+## What I implemented (step by step)
 
-The NestJS framework and application code remain unchanged; only the runtime and tooling are replaced.
+1. Bootstrapped a NestJS project and kept the app modular.
+2. Used Bun for dependency management and running scripts.
+3. Added API documentation:
+   - OpenAPI document generation via `@nestjs/swagger`
+   - Scalar UI mounted at `/reference` in [src/main.ts](src/main.ts)
+4. Wired MongoDB using Mongoose:
+   - Connection in [src/app.module.ts](src/app.module.ts) via `MONGO_URI` (with a localhost default)
+5. Implemented the `users` feature:
+   - Schema: [src/users/schemas/user.schema.ts](src/users/schemas/user.schema.ts)
+   - DTO validation: [src/users/dto/create-user.dto.ts](src/users/dto/create-user.dto.ts)
+   - Service methods (`create`, `findOne` with 404): [src/users/users.service.ts](src/users/users.service.ts)
+   - Controller routes + Swagger tags: [src/users/users.controller.ts](src/users/users.controller.ts)
 
----
-
-## Tech Stack
-
-- Framework: NestJS
-- Runtime: Bun
-- Language: TypeScript
-- API Documentation: OpenAPI (Swagger) + Scalar
-
----
 
 ## Prerequisites
-- Bun installed
 
-Install Bun and then run the project with `bun run nest start`
+- Bun installed
+- MongoDB running locally, or set `MONGO_URI` to a remote instance
+
+## Run
+
+- Install: `bun install`
+- Start (prod-ish): `bun run start`
+- Start (watch): `bun run start:dev`
+
+Environment variables:
+- `MONGO_URI` (default: `mongodb://localhost:27017/run_bun`)
+- `PORT` (default: `3005`)
+
+## Key routes
+
+- Docs (Scalar): `GET /reference`
+- Users:
+  - `POST /users` with body `{ "name": string, "age": number }`
+  - `GET /users/:id`
