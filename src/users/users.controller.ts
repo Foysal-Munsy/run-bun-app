@@ -21,7 +21,7 @@ export class UsersController {
     description: 'The found record',
     type: User,
   })
-  findOne(@Param('id') id: string): User {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<User> {
+    return this.usersService.findOne(id);
   }
 }
