@@ -10,11 +10,11 @@ export class User {
    * The name of the User
    */
   @ApiProperty({ example: 'Alice', description: 'The name of the user' })
-  @Prop({ required: true, trim: true })
+  @Prop()
   name: string;
 
   @ApiProperty({ example: 1, description: 'The age of user' })
-  @Prop({ required: true, min: 0 })
+  @Prop()
   age: number;
 }
 

@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { IsInt, IsString } from 'class-validator';
 export class CreateUserDto {
   @IsString()
-  readonly name: string;
+  name: string;
 
   @IsInt()
-  readonly age: number;
+  age: number;
 }
