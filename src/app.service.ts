@@ -7,7 +7,17 @@ import type { Cache } from 'cache-manager';
 export class AppService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  // minute hour everyday
+  // minute hour everyday. – time based rule
+  /**
+      ┌──────── minute (0–59)
+      │ ┌────── hour (0–23)
+      │ │ ┌──── day of month (1–31)
+      │ │ │ ┌── month (1–12)
+      │ │ │ │ ┌─ day of week (0–7)
+      │ │ │ │ │
+      │ │ │ │ │
+      * * * * *
+   */
   @Cron('0 0 * * *')
   handleDailyJob() {
     console.log('Runs every day at midnight');
