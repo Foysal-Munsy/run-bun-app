@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CacheModule } from '@nestjs/cache-manager';
 import { createKeyv } from '@keyv/redis';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -12,6 +14,14 @@ import { createKeyv } from '@keyv/redis';
     MongooseModule.forRoot(
       process.env.MONGO_URI ?? 'mongodb://localhost:27017/run_bun',
     ),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
+    }),
 
     // CacheModule.register({
     //   isGlobal: true,
@@ -44,6 +54,12 @@ import { createKeyv } from '@keyv/redis';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

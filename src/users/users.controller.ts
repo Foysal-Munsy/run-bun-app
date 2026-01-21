@@ -11,6 +11,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { Throttle } from '@nestjs/throttler';
 
 @UseInterceptors(CacheInterceptor)
 @ApiTags('users')
@@ -35,6 +36,9 @@ export class UsersController {
   async findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
+
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
+  // @SkipThrottle()
   @CacheTTL(60 * 1000)
   @Get()
   async getUsers() {
